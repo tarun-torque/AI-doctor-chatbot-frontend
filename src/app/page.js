@@ -242,6 +242,7 @@ export default function HealthCompanionChat() {
         <div className="absolute top-0 left-1/4 w-64 h-64 sm:w-96 sm:h-96 bg-blue-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
         <div className="absolute top-0 right-1/4 w-64 h-64 sm:w-96 sm:h-96 bg-cyan-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
         <div className="absolute bottom-0 left-1/3 w-64 h-64 sm:w-96 sm:h-96 bg-purple-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-4000"></div>
+        <div>May take more than 50 seconds</div>
       </div>
 
       {/* Header - Mobile Optimized - Sticky at Top */}
@@ -373,7 +374,9 @@ export default function HealthCompanionChat() {
                   <span className="w-2 h-2 sm:w-2.5 sm:h-2.5 bg-cyan-500 rounded-full animate-bounce [animation-delay:150ms]"></span>
                   <span className="w-2 h-2 sm:w-2.5 sm:h-2.5 bg-blue-500 rounded-full animate-bounce [animation-delay:300ms]"></span>
                 </div>
-                <span className="text-xs sm:text-sm text-gray-600 font-medium hidden xs:inline">Analyzing...</span>
+                <div className="text-xs sm:text-sm text-gray-500 italic mt-1 ml-1 flex items-center gap-1 animate-fadeInOut">
+  ⏳ This may take a while
+</div>
               </div>
             </div>
           )}

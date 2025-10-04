@@ -48,3 +48,11 @@ body {
   scrollbar-width: thin;
   scrollbar-color: #2563eb transparent;
 }
+
+@keyframes fadeInOut {
+  0%, 100% { opacity: 0; }
+  10%, 90% { opacity: 1; }
+}
+.animate-fadeInOut {
+  animation: fadeInOut 3s ease-in-out infinite;
+}
