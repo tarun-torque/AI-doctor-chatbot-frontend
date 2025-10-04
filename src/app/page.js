@@ -236,7 +236,7 @@ export default function HealthCompanionChat() {
   const showQuickPrompts = messages.length === 1 && !loading;
 
   return (
-    <div className="flex flex-col h-screen w-full max-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-cyan-50 relative overflow-hidden">
+    <div className="flex flex-col h-screen w-full bg-gradient-to-br from-slate-50 via-blue-50 to-cyan-50 relative overflow-hidden">
       {/* Animated background - reduced on mobile */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-40 sm:opacity-60">
         <div className="absolute top-0 left-1/4 w-64 h-64 sm:w-96 sm:h-96 bg-blue-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
@@ -244,8 +244,8 @@ export default function HealthCompanionChat() {
         <div className="absolute bottom-0 left-1/3 w-64 h-64 sm:w-96 sm:h-96 bg-purple-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-4000"></div>
       </div>
 
-      {/* Header - Mobile Optimized - Fixed Position */}
-      <div className="relative z-50 flex items-center justify-between gap-2 px-3 py-3 sm:px-6 sm:py-4 border-b bg-white shadow-md flex-shrink-0">
+      {/* Header - Mobile Optimized - Sticky at Top */}
+      <div className="sticky top-0 z-50 flex items-center justify-between gap-2 px-3 py-3 sm:px-6 sm:py-4 border-b bg-white shadow-md flex-shrink-0">
         <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
           <div className="relative flex-shrink-0">
             <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-gradient-to-br from-blue-500 via-cyan-500 to-blue-600 flex items-center justify-center shadow-lg">
@@ -275,7 +275,7 @@ export default function HealthCompanionChat() {
 
       {/* Dropdown Menu - Mobile Friendly */}
       {showMenu && (
-        <div className="relative z-40 bg-white border-b shadow-lg animate-fadeIn flex-shrink-0">
+        <div className="sticky top-[73px] z-40 bg-white border-b shadow-lg animate-fadeIn flex-shrink-0">
           <div className="flex flex-col">
             <button
               onClick={exportChat}
@@ -381,8 +381,8 @@ export default function HealthCompanionChat() {
         </div>
       </div>
 
-      {/* Input - Mobile Optimized */}
-      <div className="relative z-30 flex flex-col border-t bg-white shadow-2xl flex-shrink-0">
+      {/* Input - Mobile Optimized - Sticky at Bottom */}
+      <div className="sticky bottom-0 z-30 flex flex-col border-t bg-white shadow-2xl flex-shrink-0">
         <div className="flex items-end gap-2 sm:gap-3 p-3 sm:p-4 md:p-5 max-w-4xl mx-auto w-full">
           <div className={`flex-1 relative transition-all duration-200 ${isFocused ? 'transform scale-[1.01]' : ''}`}>
             <textarea
@@ -421,16 +421,6 @@ export default function HealthCompanionChat() {
             <Send size={20} className="sm:w-[22px] sm:h-[22px]" />
           </button>
         </div>
-        
-        {/* Disclaimer - Mobile Optimized */}
-        {/* <div className="px-3 sm:px-4 py-3 sm:py-4 text-center text-xs bg-gradient-to-r from-amber-50 via-orange-50 to-amber-50 border-t-2 border-amber-200 pb-safe">
-          <div className="flex items-start sm:items-center justify-center gap-2 max-w-4xl mx-auto">
-            <AlertCircle className="w-4 h-4 text-amber-600 flex-shrink-0 animate-pulse mt-0.5 sm:mt-0" />
-            <span className="text-gray-700 text-left sm:text-center leading-relaxed">
-              <strong className="text-amber-700">Important:</strong> This AI provides general health information only. Always consult a healthcare provider for medical advice.
-            </span>
-          </div>
-        </div> */}
       </div>
 
       <style jsx>{`
@@ -466,12 +456,6 @@ export default function HealthCompanionChat() {
         }
         .animate-fadeIn {
           animation: fadeIn 0.4s ease-out;
-        }
-        .safe-area-bottom {
-          padding-bottom: env(safe-area-inset-bottom);
-        }
-        .pb-safe {
-          padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
         }
         @media (max-width: 640px) {
           .active\:scale-98:active {
