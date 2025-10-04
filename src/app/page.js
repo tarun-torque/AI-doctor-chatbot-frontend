@@ -236,7 +236,7 @@ export default function HealthCompanionChat() {
   const showQuickPrompts = messages.length === 1 && !loading;
 
   return (
-    <div className="flex flex-col h-screen w-full bg-gradient-to-br from-slate-50 via-blue-50 to-cyan-50 relative overflow-hidden">
+    <div className="flex flex-col h-screen w-full max-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-cyan-50 relative overflow-hidden">
       {/* Animated background - reduced on mobile */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-40 sm:opacity-60">
         <div className="absolute top-0 left-1/4 w-64 h-64 sm:w-96 sm:h-96 bg-blue-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
@@ -244,11 +244,11 @@ export default function HealthCompanionChat() {
         <div className="absolute bottom-0 left-1/3 w-64 h-64 sm:w-96 sm:h-96 bg-purple-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-4000"></div>
       </div>
 
-      {/* Header - Mobile Optimized */}
-      <div className="relative z-10 flex items-center justify-between gap-2 px-3 py-3 sm:px-6 sm:py-4 border-b bg-white/90 backdrop-blur-xl shadow-sm">
+      {/* Header - Mobile Optimized - Fixed Position */}
+      <div className="relative z-50 flex items-center justify-between gap-2 px-3 py-3 sm:px-6 sm:py-4 border-b bg-white shadow-md flex-shrink-0">
         <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
           <div className="relative flex-shrink-0">
-            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-gradient-to-br from-blue-500 via-cyan-500 to-blue-600 flex items-center justify-center shadow-lg sm:shadow-xl sm:shadow-blue-500/30">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-gradient-to-br from-blue-500 via-cyan-500 to-blue-600 flex items-center justify-center shadow-lg">
               <Stethoscope className="text-white" size={20} />
             </div>
             <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 border-2 border-white rounded-full">
@@ -267,7 +267,7 @@ export default function HealthCompanionChat() {
         {/* Mobile Menu Button */}
         <button
           onClick={() => setShowMenu(!showMenu)}
-          className="p-2 sm:p-2.5 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-600 transition-all active:scale-95 flex-shrink-0"
+          className="p-2 sm:p-2.5 rounded-xl bg-gray-100 hover:bg-gray-200 active:bg-gray-300 text-gray-600 transition-all active:scale-95 flex-shrink-0"
         >
           {showMenu ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </button>
@@ -275,7 +275,7 @@ export default function HealthCompanionChat() {
 
       {/* Dropdown Menu - Mobile Friendly */}
       {showMenu && (
-        <div className="relative z-20 bg-white border-b shadow-lg animate-fadeIn">
+        <div className="relative z-40 bg-white border-b shadow-lg animate-fadeIn flex-shrink-0">
           <div className="flex flex-col">
             <button
               onClick={exportChat}
@@ -296,8 +296,8 @@ export default function HealthCompanionChat() {
       )}
 
       {/* Messages - Mobile Optimized */}
-      <div className="relative z-10 flex-1 p-3 sm:p-4 md:p-6 overflow-y-auto scroll-smooth overscroll-contain">
-        <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6">
+      <div className="relative z-10 flex-1 p-3 sm:p-4 md:p-6 overflow-y-auto scroll-smooth overscroll-contain min-h-0">
+        <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6 pb-4">
           {/* Quick Prompts - Mobile Grid */}
           {showQuickPrompts && (
             <div className="animate-fadeIn">
@@ -382,7 +382,7 @@ export default function HealthCompanionChat() {
       </div>
 
       {/* Input - Mobile Optimized */}
-      <div className="relative z-10 flex flex-col border-t bg-white/95 backdrop-blur-xl shadow-2xl safe-area-bottom">
+      <div className="relative z-30 flex flex-col border-t bg-white shadow-2xl flex-shrink-0">
         <div className="flex items-end gap-2 sm:gap-3 p-3 sm:p-4 md:p-5 max-w-4xl mx-auto w-full">
           <div className={`flex-1 relative transition-all duration-200 ${isFocused ? 'transform scale-[1.01]' : ''}`}>
             <textarea
