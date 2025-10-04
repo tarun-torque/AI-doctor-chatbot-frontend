@@ -1,19 +1,38 @@
-'use client'
+"use client";
 import { useState, useEffect, useRef } from "react";
-import { Send, Stethoscope, User, AlertCircle, Sparkles, Heart, Clock, Activity, Pill, AlertTriangle, CheckCircle2, Trash2, Download, Menu, X } from "lucide-react";
+import {
+  Send,
+  Stethoscope,
+  User,
+  AlertCircle,
+  Sparkles,
+  Heart,
+  mic,
+  Clock,
+  Activity,
+  Pill,
+  AlertTriangle,
+  CheckCircle2,
+  Trash2,
+  Download,
+  Menu,
+  X,
+} from "lucide-react";
 
 export default function HealthCompanionChat() {
+
   const [messages, setMessages] = useState([
-    { 
-      role: "bot", 
+    {
+      role: "bot",
       content: {
-        greeting: "Hello 👋 I'm your AI Health Companion. I'm here to help answer your health questions and provide general guidance. How can I assist you today?",
+        greeting:
+          "Hello 👋 I'm your AI Health Companion. I'm here to help answer your health questions and provide general guidance. How can I assist you today?",
         possible_causes: "",
         self_care: "",
         when_to_see_doctor: "",
-        closing: ""
+        closing: "",
       },
-      timestamp: new Date()
+      timestamp: new Date(),
     },
   ]);
   const [input, setInput] = useState("");
@@ -22,6 +41,7 @@ export default function HealthCompanionChat() {
   const [showMenu, setShowMenu] = useState(false);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
+  
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -33,41 +53,47 @@ export default function HealthCompanionChat() {
 
   const clearChat = () => {
     setMessages([
-      { 
-        role: "bot", 
+      {
+        role: "bot",
         content: {
-          greeting: "Hello 👋 I'm your AI Health Companion. I'm here to help answer your health questions and provide general guidance. How can I assist you today?",
+          greeting:
+            "Hello 👋 I'm your AI Health Companion. I'm here to help answer your health questions and provide general guidance. How can I assist you today?",
           possible_causes: "",
           self_care: "",
           when_to_see_doctor: "",
-          closing: ""
+          closing: "",
         },
-        timestamp: new Date()
+        timestamp: new Date(),
       },
     ]);
     setShowMenu(false);
   };
 
   const exportChat = () => {
-    const chatText = messages.map(msg => {
-      if (msg.role === "user") {
-        return `You (${formatTime(msg.timestamp)}):\n${msg.content}\n`;
-      } else {
-        const content = msg.content;
-        let text = `AI Health Companion (${formatTime(msg.timestamp)}):\n`;
-        if (content.greeting) text += `${content.greeting}\n\n`;
-        if (content.possible_causes) text += `Possible Causes:\n${content.possible_causes}\n\n`;
-        if (content.self_care) text += `Self-care & Advice:\n${content.self_care}\n\n`;
-        if (content.when_to_see_doctor) text += `When to See a Doctor:\n${content.when_to_see_doctor}\n\n`;
-        return text;
-      }
-    }).join('\n---\n\n');
+    const chatText = messages
+      .map((msg) => {
+        if (msg.role === "user") {
+          return `You (${formatTime(msg.timestamp)}):\n${msg.content}\n`;
+        } else {
+          const content = msg.content;
+          let text = `AI Health Companion (${formatTime(msg.timestamp)}):\n`;
+          if (content.greeting) text += `${content.greeting}\n\n`;
+          if (content.possible_causes)
+            text += `Possible Causes:\n${content.possible_causes}\n\n`;
+          if (content.self_care)
+            text += `Self-care & Advice:\n${content.self_care}\n\n`;
+          if (content.when_to_see_doctor)
+            text += `When to See a Doctor:\n${content.when_to_see_doctor}\n\n`;
+          return text;
+        }
+      })
+      .join("\n---\n\n");
 
-    const blob = new Blob([chatText], { type: 'text/plain' });
+    const blob = new Blob([chatText], { type: "text/plain" });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = url;
-    a.download = `health-chat-${new Date().toISOString().split('T')[0]}.txt`;
+    a.download = `health-chat-${new Date().toISOString().split("T")[0]}.txt`;
     a.click();
     URL.revokeObjectURL(url);
     setShowMenu(false);
@@ -81,7 +107,7 @@ export default function HealthCompanionChat() {
     setInput("");
     setLoading(true);
 
-    await new Promise(resolve => setTimeout(resolve, 300));
+    await new Promise((resolve) => setTimeout(resolve, 300));
 
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/ask`, {
@@ -92,11 +118,13 @@ export default function HealthCompanionChat() {
 
       const data = await res.json();
       let botContent = data.answer || {
-        greeting: "I apologize, but I'm having trouble processing your request right now.",
+        greeting:
+          "I apologize, but I'm having trouble processing your request right now.",
         possible_causes: "",
         self_care: "",
-        when_to_see_doctor: "If you have urgent health concerns, please contact a healthcare provider immediately.",
-        closing: ""
+        when_to_see_doctor:
+          "If you have urgent health concerns, please contact a healthcare provider immediately.",
+        closing: "",
       };
 
       const cleanString = (str) => str.replace(/^```json\s*|```$/g, "").trim();
@@ -110,12 +138,21 @@ export default function HealthCompanionChat() {
             possible_causes: botContent,
             self_care: "",
             when_to_see_doctor: "",
-            closing: ""
+            closing: "",
           };
         }
       } else {
-        ["greeting", "possible_causes", "self_care", "when_to_see_doctor", "closing"].forEach(key => {
-          if (typeof botContent[key] === "string" && botContent[key].startsWith("```json")) {
+        [
+          "greeting",
+          "possible_causes",
+          "self_care",
+          "when_to_see_doctor",
+          "closing",
+        ].forEach((key) => {
+          if (
+            typeof botContent[key] === "string" &&
+            botContent[key].startsWith("```json")
+          ) {
             try {
               const parsed = JSON.parse(cleanString(botContent[key]));
               botContent = { ...botContent, ...parsed };
@@ -128,21 +165,25 @@ export default function HealthCompanionChat() {
         botContent.closing = "";
       }
 
-      setMessages((prev) => [...prev, { role: "bot", content: botContent, timestamp: new Date() }]);
+      setMessages((prev) => [
+        ...prev,
+        { role: "bot", content: botContent, timestamp: new Date() },
+      ]);
     } catch (err) {
       setMessages((prev) => [
         ...prev,
-        { 
-          role: "bot", 
+        {
+          role: "bot",
           content: {
             greeting: "",
             possible_causes: "",
             self_care: "",
-            when_to_see_doctor: "⚠️ I'm experiencing technical difficulties. Please try again in a moment. If you have urgent health concerns, contact a healthcare provider immediately.",
-            closing: ""
+            when_to_see_doctor:
+              "⚠️ I'm experiencing technical difficulties. Please try again in a moment. If you have urgent health concerns, contact a healthcare provider immediately.",
+            closing: "",
           },
-          timestamp: new Date()
-        }
+          timestamp: new Date(),
+        },
       ]);
     }
 
@@ -150,10 +191,10 @@ export default function HealthCompanionChat() {
   };
 
   const formatTime = (date) => {
-    return new Intl.DateTimeFormat('en-US', {
-      hour: 'numeric',
-      minute: '2-digit',
-      hour12: true
+    return new Intl.DateTimeFormat("en-US", {
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
     }).format(date);
   };
 
@@ -170,8 +211,12 @@ export default function HealthCompanionChat() {
   };
 
   const renderBotMessage = (content) => {
-    const hasContent = content.greeting || content.possible_causes || content.self_care || content.when_to_see_doctor;
-    
+    const hasContent =
+      content.greeting ||
+      content.possible_causes ||
+      content.self_care ||
+      content.when_to_see_doctor;
+
     if (!hasContent) return null;
 
     return (
@@ -181,10 +226,12 @@ export default function HealthCompanionChat() {
             <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-blue-100 to-cyan-100 flex items-center justify-center flex-shrink-0 mt-0.5">
               <Sparkles className="w-3.5 h-3.5 text-blue-600" />
             </div>
-            <div className="flex-1 font-medium text-gray-800 text-sm sm:text-base whitespace-pre-line leading-relaxed">{content.greeting}</div>
+            <div className="flex-1 font-medium text-gray-800 text-sm sm:text-base whitespace-pre-line leading-relaxed">
+              {content.greeting}
+            </div>
           </div>
         )}
-        
+
         {content.possible_causes && (
           <div className="group relative overflow-hidden bg-gradient-to-br from-blue-50 to-blue-100/50 rounded-xl sm:rounded-2xl p-3 sm:p-4 border-2 border-blue-200/50 hover:border-blue-300 transition-all duration-300">
             <div className="absolute top-0 right-0 w-24 h-24 bg-blue-200 rounded-full filter blur-2xl opacity-20"></div>
@@ -193,13 +240,17 @@ export default function HealthCompanionChat() {
                 <div className="w-7 h-7 rounded-lg bg-blue-500 flex items-center justify-center flex-shrink-0">
                   <AlertCircle className="w-3.5 h-3.5 text-white" />
                 </div>
-                <strong className="text-blue-900 text-sm sm:text-base">Possible Causes</strong>
+                <strong className="text-blue-900 text-sm sm:text-base">
+                  Possible Causes
+                </strong>
               </div>
-              <div className="text-gray-700 text-xs sm:text-sm whitespace-pre-line leading-relaxed pl-9">{content.possible_causes}</div>
+              <div className="text-gray-700 text-xs sm:text-sm whitespace-pre-line leading-relaxed pl-9">
+                {content.possible_causes}
+              </div>
             </div>
           </div>
         )}
-        
+
         {content.self_care && (
           <div className="group relative overflow-hidden bg-gradient-to-br from-green-50 to-emerald-100/50 rounded-xl sm:rounded-2xl p-3 sm:p-4 border-2 border-green-200/50 hover:border-green-300 transition-all duration-300">
             <div className="absolute top-0 right-0 w-24 h-24 bg-green-200 rounded-full filter blur-2xl opacity-20"></div>
@@ -208,13 +259,17 @@ export default function HealthCompanionChat() {
                 <div className="w-7 h-7 rounded-lg bg-green-500 flex items-center justify-center flex-shrink-0">
                   <Heart className="w-3.5 h-3.5 text-white" />
                 </div>
-                <strong className="text-green-900 text-sm sm:text-base">Self-care & Tips</strong>
+                <strong className="text-green-900 text-sm sm:text-base">
+                  Self-care & Tips
+                </strong>
               </div>
-              <div className="text-gray-700 text-xs sm:text-sm whitespace-pre-line leading-relaxed pl-9">{content.self_care}</div>
+              <div className="text-gray-700 text-xs sm:text-sm whitespace-pre-line leading-relaxed pl-9">
+                {content.self_care}
+              </div>
             </div>
           </div>
         )}
-        
+
         {content.when_to_see_doctor && (
           <div className="group relative overflow-hidden bg-gradient-to-br from-red-50 to-rose-100/50 rounded-xl sm:rounded-2xl p-3 sm:p-4 border-2 border-red-200/50 hover:border-red-300 transition-all duration-300">
             <div className="absolute top-0 right-0 w-24 h-24 bg-red-200 rounded-full filter blur-2xl opacity-20"></div>
@@ -223,9 +278,13 @@ export default function HealthCompanionChat() {
                 <div className="w-7 h-7 rounded-lg bg-red-500 flex items-center justify-center flex-shrink-0 animate-pulse">
                   <AlertTriangle className="w-3.5 h-3.5 text-white" />
                 </div>
-                <strong className="text-red-900 text-sm sm:text-base">See a Doctor If</strong>
+                <strong className="text-red-900 text-sm sm:text-base">
+                  See a Doctor If
+                </strong>
               </div>
-              <div className="text-red-800 text-xs sm:text-sm whitespace-pre-line leading-relaxed font-medium pl-9">{content.when_to_see_doctor}</div>
+              <div className="text-red-800 text-xs sm:text-sm whitespace-pre-line leading-relaxed font-medium pl-9">
+                {content.when_to_see_doctor}
+              </div>
             </div>
           </div>
         )}
@@ -242,7 +301,7 @@ export default function HealthCompanionChat() {
         <div className="absolute top-0 left-1/4 w-64 h-64 sm:w-96 sm:h-96 bg-blue-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
         <div className="absolute top-0 right-1/4 w-64 h-64 sm:w-96 sm:h-96 bg-cyan-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
         <div className="absolute bottom-0 left-1/3 w-64 h-64 sm:w-96 sm:h-96 bg-purple-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-4000"></div>
-        <div>May take more than 50 seconds</div>
+        {/* <div>May take more than 50 seconds</div> */}
       </div>
 
       {/* Header - Mobile Optimized - Sticky at Top */}
@@ -257,14 +316,16 @@ export default function HealthCompanionChat() {
             </span>
           </div>
           <div className="min-w-0 flex-1">
-            <h1 className="font-bold text-base sm:text-xl bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent truncate">AI Health Companion</h1>
+            <h1 className="font-bold text-base sm:text-xl bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent truncate">
+              AI Health Companion
+            </h1>
             <p className="text-xs text-gray-500 flex items-center gap-1 truncate">
               <CheckCircle2 className="w-3 h-3 text-green-500 flex-shrink-0" />
               <span className="truncate">Online • By Tarun</span>
             </p>
           </div>
         </div>
-        
+
         {/* Mobile Menu Button */}
         <button
           onClick={() => setShowMenu(!showMenu)}
@@ -283,14 +344,18 @@ export default function HealthCompanionChat() {
               className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 active:bg-gray-100 transition-colors text-left"
             >
               <Download className="w-5 h-5 text-gray-600" />
-              <span className="text-sm font-medium text-gray-700">Export Chat</span>
+              <span className="text-sm font-medium text-gray-700">
+                Export Chat
+              </span>
             </button>
             <button
               onClick={clearChat}
               className="flex items-center gap-3 px-4 py-3 hover:bg-red-50 active:bg-red-100 transition-colors text-left border-t"
             >
               <Trash2 className="w-5 h-5 text-red-600" />
-              <span className="text-sm font-medium text-red-600">Clear Chat</span>
+              <span className="text-sm font-medium text-red-600">
+                Clear Chat
+              </span>
             </button>
           </div>
         </div>
@@ -302,7 +367,9 @@ export default function HealthCompanionChat() {
           {/* Quick Prompts - Mobile Grid */}
           {showQuickPrompts && (
             <div className="animate-fadeIn">
-              <p className="text-center text-xs sm:text-sm text-gray-500 mb-3 sm:mb-4 px-2">Quick suggestions to get started:</p>
+              <p className="text-center text-xs sm:text-sm text-gray-500 mb-3 sm:mb-4 px-2">
+                Quick suggestions to get started:
+              </p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 mb-4 sm:mb-6">
                 {quickPrompts.map((prompt, i) => (
                   <button
@@ -313,7 +380,9 @@ export default function HealthCompanionChat() {
                     <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-blue-100 group-hover:bg-blue-200 flex items-center justify-center transition-colors flex-shrink-0">
                       <prompt.icon className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600" />
                     </div>
-                    <span className="text-xs sm:text-sm font-medium text-gray-700 text-left">{prompt.text}</span>
+                    <span className="text-xs sm:text-sm font-medium text-gray-700 text-left">
+                      {prompt.text}
+                    </span>
                   </button>
                 ))}
               </div>
@@ -323,30 +392,39 @@ export default function HealthCompanionChat() {
           {messages.map((msg, i) => (
             <div
               key={i}
-              className={`flex items-end gap-2 sm:gap-3 ${msg.role === "user" ? "justify-end" : "justify-start"} animate-fadeIn`}
+              className={`flex items-end gap-2 sm:gap-3 ${
+                msg.role === "user" ? "justify-end" : "justify-start"
+              } animate-fadeIn`}
             >
               {msg.role === "bot" && (
                 <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl sm:rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center shadow-md sm:shadow-lg flex-shrink-0 mb-8 sm:mb-10">
                   <Stethoscope size={16} className="text-white" />
                 </div>
               )}
-              
+
               <div className="flex flex-col max-w-[85%] sm:max-w-xl md:max-w-2xl">
                 <div
                   className={`relative px-3 py-3 sm:px-5 sm:py-4 rounded-xl sm:rounded-2xl text-sm shadow-lg transition-all
-                    ${msg.role === "user"
-                      ? "bg-gradient-to-r from-blue-600 via-cyan-600 to-blue-600 text-white rounded-br-sm"
-                      : "bg-white text-gray-900 border border-gray-100 rounded-bl-sm"
+                    ${
+                      msg.role === "user"
+                        ? "bg-gradient-to-r from-blue-600 via-cyan-600 to-blue-600 text-white rounded-br-sm"
+                        : "bg-white text-gray-900 border border-gray-100 rounded-bl-sm"
                     }`}
                 >
                   {msg.role === "user" ? (
-                    <div className="whitespace-pre-line leading-relaxed text-sm sm:text-base">{msg.content}</div>
+                    <div className="whitespace-pre-line leading-relaxed text-sm sm:text-base">
+                      {msg.content}
+                    </div>
                   ) : (
                     renderBotMessage(msg.content)
                   )}
                 </div>
-                
-                <div className={`flex items-center gap-1 sm:gap-2 mt-1 sm:mt-2 px-2 ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
+
+                <div
+                  className={`flex items-center gap-1 sm:gap-2 mt-1 sm:mt-2 px-2 ${
+                    msg.role === "user" ? "justify-end" : "justify-start"
+                  }`}
+                >
                   <Clock className="w-3 h-3 text-gray-400" />
                   <span className="text-xs text-gray-500">
                     {formatTime(msg.timestamp)}
@@ -375,8 +453,8 @@ export default function HealthCompanionChat() {
                   <span className="w-2 h-2 sm:w-2.5 sm:h-2.5 bg-blue-500 rounded-full animate-bounce [animation-delay:300ms]"></span>
                 </div>
                 <div className="text-xs sm:text-sm text-gray-500 italic mt-1 ml-1 flex items-center gap-1 animate-fadeInOut">
-  ⏳ This may take a while
-</div>
+                  ⏳ This may take a while
+                </div>
               </div>
             </div>
           )}
@@ -387,7 +465,11 @@ export default function HealthCompanionChat() {
       {/* Input - Mobile Optimized - Sticky at Bottom */}
       <div className="sticky bottom-0 z-30 flex flex-col border-t bg-white shadow-2xl flex-shrink-0">
         <div className="flex items-end gap-2 sm:gap-3 p-3 sm:p-4 md:p-5 max-w-4xl mx-auto w-full">
-          <div className={`flex-1 relative transition-all duration-200 ${isFocused ? 'transform scale-[1.01]' : ''}`}>
+          <div
+            className={`flex-1 relative transition-all duration-200 ${
+              isFocused ? "transform scale-[1.01]" : ""
+            }`}
+          >
             <textarea
               ref={inputRef}
               value={input}
@@ -400,25 +482,30 @@ export default function HealthCompanionChat() {
               }}
               onFocus={() => setIsFocused(true)}
               onBlur={() => setIsFocused(false)}
-              placeholder="Describe your symptoms..."
+              placeholder="Ask me..."
               rows={1}
               className="w-full p-3 sm:p-4 pr-12 sm:pr-16 border-2 border-gray-200 rounded-xl sm:rounded-2xl text-gray-900 text-sm sm:text-base placeholder-gray-400 focus:outline-none focus:border-blue-400 focus:ring-2 sm:focus:ring-4 focus:ring-blue-100 shadow-lg transition-all resize-none min-h-[48px] max-h-[120px]"
-              style={{ scrollbarWidth: 'thin' }}
+              style={{ scrollbarWidth: "thin" }}
             />
             {input.length > 0 && (
-              <div className={`absolute right-3 sm:right-4 bottom-3 sm:bottom-4 text-xs font-medium transition-colors ${input.length > 500 ? 'text-red-500' : 'text-gray-400'}`}>
+              <div
+                className={`absolute right-3 sm:right-4 bottom-3 sm:bottom-4 text-xs font-medium transition-colors ${
+                  input.length > 500 ? "text-red-500" : "text-gray-400"
+                }`}
+              >
                 {input.length}
               </div>
             )}
           </div>
-          
+
           <button
             onClick={sendMessage}
             disabled={!input.trim() || loading}
             className={`p-3 sm:p-4 rounded-xl sm:rounded-2xl shadow-lg transition-all duration-200 transform active:scale-95 mb-0.5 flex-shrink-0
-              ${input.trim() && !loading
-                ? "bg-gradient-to-r from-blue-600 via-cyan-600 to-blue-600 text-white hover:shadow-xl active:shadow-md"
-                : "bg-gray-200 text-gray-400 cursor-not-allowed"
+              ${
+                input.trim() && !loading
+                  ? "bg-gradient-to-r from-blue-600 via-cyan-600 to-blue-600 text-white hover:shadow-xl active:shadow-md"
+                  : "bg-gray-200 text-gray-400 cursor-not-allowed"
               }`}
           >
             <Send size={20} className="sm:w-[22px] sm:h-[22px]" />
@@ -428,7 +515,8 @@ export default function HealthCompanionChat() {
 
       <style jsx>{`
         @keyframes blob {
-          0%, 100% {
+          0%,
+          100% {
             transform: translate(0px, 0px) scale(1);
           }
           33% {
