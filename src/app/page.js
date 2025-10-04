@@ -423,14 +423,14 @@ export default function HealthCompanionChat() {
         </div>
         
         {/* Disclaimer - Mobile Optimized */}
-        <div className="px-3 sm:px-4 py-3 sm:py-4 text-center text-xs bg-gradient-to-r from-amber-50 via-orange-50 to-amber-50 border-t-2 border-amber-200 pb-safe">
+        {/* <div className="px-3 sm:px-4 py-3 sm:py-4 text-center text-xs bg-gradient-to-r from-amber-50 via-orange-50 to-amber-50 border-t-2 border-amber-200 pb-safe">
           <div className="flex items-start sm:items-center justify-center gap-2 max-w-4xl mx-auto">
             <AlertCircle className="w-4 h-4 text-amber-600 flex-shrink-0 animate-pulse mt-0.5 sm:mt-0" />
             <span className="text-gray-700 text-left sm:text-center leading-relaxed">
               <strong className="text-amber-700">Important:</strong> This AI provides general health information only. Always consult a healthcare provider for medical advice.
             </span>
           </div>
-        </div>
+        </div> */}
       </div>
 
       <style jsx>{`
